@@ -27,16 +27,17 @@ class MainWidget(BoxLayout):
         self._server_ip=kwargs.get('server_ip')
         self._server_port=kwargs.get('server_port')
         self._modbusClient=ModbusClient(host=self._server_ip,port=self._server_port)
-        self.startDataRead(self._server_ip,self._server_port) #Para teste de leitura de dados
-        #self._modbusPopup=ModbusPopup()
-        #self._scanPopup=ScanPopup(self._scan_time)
+        self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
+        self._scanPopup=ScanPopup(scan_time=self._scan_time)
         self._meas={}
         self._meas['timestamp']= None
         self._meas['values']={}
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
             self._tags[key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
-    
+        
+        self.startDataRead(self._server_ip,self._server_port) #Para teste de leitura de dados
+
     def startDataRead(self,ip,port):
         """
         Método utilizado para a configuração do IP e porta 
@@ -48,15 +49,15 @@ class MainWidget(BoxLayout):
         self._modbusClient.host=self._server_ip
         self._modbusClient.port=self._server_port
         try:
-            #Window.set_system_cursor('wait')
+            Window.set_system_cursor('wait')
             self._modbusClient.open()
-            #Window.set_system_cursor('arrow')
-            if self._modbusClient.is_open():
+            Window.set_system_cursor('arrow')
+            if self._modbusClient.is_open:
                 self._updateThread = Thread(target=self.updater)
                 self._updateThread.start()
-                # self.ids.img.con.source= 'img/conectado.png'
-                #self._modbusPopup.dismiss()
-                self.readData()
+                self.ids.img_con.source= 'imgs/conectado.png'
+                self._modbusPopup.dismiss()
+             
             else:
                 self._modbusPopup.setInfo('Erro na conexão com o servidor')
         except Exception as e:
@@ -81,6 +82,7 @@ class MainWidget(BoxLayout):
         """
         Método para a leitura dos dados por meio do protocolo MODBUS
         """
+        print('Lendo dados')
         self._meas['timestamp']=datetime.now() 
         for key,value in self._tags.items():
             if value['tipo']=='4X': #Holding Register 16bits
@@ -97,6 +99,7 @@ class MainWidget(BoxLayout):
         result = self._modbusClient.read_holding_registers(addr,2)
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder=Endian.Big, wordorder=Endian.Little)
         decoded = decoder.decode_32bit_float()
+        print("Valor lido: ",decoded)
         return decoded
             
         
