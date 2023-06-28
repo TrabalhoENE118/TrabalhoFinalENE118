@@ -12,75 +12,75 @@ class MainApp(App):
         """
         self._widget=MainWidget(scantime=1000,server_ip='localhost',server_port=502,
         modbus_addrs={
-            'es.temp_carc':{
+            'tempCarc':{
                 'addr':706, 
                 #Temperatura da carcaça
                 'tipo':'FP',
                 'div':10.0
             },
-            'es.esteira':{
+            'velEsteira':{
                 'addr':724, 
                 #Velocidade da esteira
                 'tipo':'FP',
                 'div':1.0
             },
-            'es.le_carga':{
+            'cargaPV':{
                 'addr':710,
                 #Valor lido da carga na esteira(PV) 
                 'tipo':'FP',
                 'div':1.0
 
-                },
-            'es.carga':{
-                'addr':1302,
-                #Valor da carga na esteira no PID(SP- SET POINT))     
-                'tipo':'FP',
-                'div':1.0
             },
-            'es.status_pid':{
+            'tensaoRS':{
+                'addr':847,
+                #Valor de ddp entre R e S   
+                'tipo':'4X',
+                'div':10.0
+            },
+            'statusPID':{
                 'addr':722,
                 #Status do PID     
                 'tipo':'4X',
                 'div':1.0
             },
-            'es.frequencia':{
+            'frequencia':{
                 'addr':830,
                 #Frequência da rede
                 'tipo':'4X',
                 'div':100.0
             }   ,
-            'es.corrente_media':{
+            'correnteMedia':{
                 'addr':845,
                 #Corrente média     
                 'tipo':'4X',
                 'div':100.0
             },
-            'es.ativa_total':{
+            'potAtivaTotal':{
                 'addr':855,
                 #Potência ativa total
                 'tipo':'4X',
                 'div':1.0
 
             },
-            'es.fp_total':{
+            'fpTotal':{
                 'addr':871,
                 #Fator de potência total
                 'tipo':'4X',
                 'div':1000.0
             },
-            'es.encoder':{
+            'freqRotacao':{
                 'addr':884,
                 #Frequência de rotação
                 'tipo':'FP',
                 'div':1.0
             },
-            'es.indica_driver':{
+            'indicaPartida':{
                 'addr':1216, 
                 #Indica a partida selecionada(Direta=0, Soft Start=1, Inversor=2)         
                 'tipo':'4X',
                 'div':1.0
                 },
-            'es.torque':{
+            'torque':{
                 'addr':1420,
                 #Torque
                 'tipo':'FP',

@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
-from popups import ModbusPopup,ScanPopup
+from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup
 from pyModbusTCP.client import ModbusClient
 from kivy.core.window import Window
 from threading import Thread
@@ -29,15 +29,17 @@ class MainWidget(BoxLayout):
         self._modbusClient=ModbusClient(host=self._server_ip,port=self._server_port)
         self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
         self._scanPopup=ScanPopup(scan_time=self._scan_time)
+        
         self._meas={}
         self._meas['timestamp']= None
         self._meas['values']={}
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
             self._tags[key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
-        
-        self.startDataRead(self._server_ip,self._server_port) #Para teste de leitura de dados
 
+        self._pidPopup=PidPopup()
+        self._medicoesPopup=MedicoesPopup()
+        
     def startDataRead(self,ip,port):
         """
         Método utilizado para a configuração do IP e porta 
@@ -70,7 +72,7 @@ class MainWidget(BoxLayout):
         try:
             while self._updateWidgets:
                 self.readData()
-                #Atualiza a interface gráfica
+                self.updateGUI()
                 #Atualiza o banco de dados
                 sleep(self._scan_time/1000)
         except Exception as e:
@@ -82,8 +84,8 @@ class MainWidget(BoxLayout):
         """
         Método para a leitura dos dados por meio do protocolo MODBUS
         """
-        print('Lendo dados')
         self._meas['timestamp']=datetime.now() 
+        print("------------------------")
         for key,value in self._tags.items():
             if value['tipo']=='4X': #Holding Register 16bits
                 self._meas['values'][key]=(self._modbusClient.read_holding_registers(value['addr'],1)[0])/value['div']
@@ -91,7 +93,26 @@ class MainWidget(BoxLayout):
             elif value['tipo']=='FP': #Floating Point
                 self._meas['values'][key]=(self.lerFloat(value['addr']))/value['div']
                 print(f'{key}={self._meas["values"][key]}')
-    
+    def updateGUI(self):
+        '''
+        Método para a atualização da interface gráfica
+        '''
+        self.ids['tempCarc'].text=str(self._meas['values']['tempCarc'])+' ºC'
+        self.ids['velEsteira'].text=str(round(self._meas['values']['velEsteira'],2))+' m/min'
+        self.ids['cargaPV'].text=str(self._meas['values']['cargaPV'])+' kgf/cm²'
+        self.ids['freqRotacao'].text=str(self._meas['values']['freqRotacao'])+' RPM'
+        partida=self._meas['values']['indicaPartida']
+        if partida==0:
+            self.ids['indicaPartida'].text='Direta'
+        elif partida==1:
+            self.ids['indicaPartida'].text='Soft-Start'
+        elif partida==2:
+            self.ids['indicaPartida'].text='Inversor'
+        self.ids['torque'].text=str(self._meas['values']['torque'])+' N.m'
+
+        self._pidPopup.update(self._meas)
+        self._medicoesPopup.update(self._meas)
+
     def lerFloat(self,addr):
         """
         Método para a leitura de um "float" na tabela MODBUS
@@ -99,7 +120,6 @@ class MainWidget(BoxLayout):
         result = self._modbusClient.read_holding_registers(addr,2)
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder=Endian.Big, wordorder=Endian.Little)
         decoded = decoder.decode_32bit_float()
-        print("Valor lido: ",decoded)
         return decoded
             
         

@@ -28,8 +28,10 @@
                     text: 'Conexão'
                     on_release: root._modbusPopup.open()
                 Button:
-                    text: 'Tempo de Atualização'
+                    text: 'Scantime'
                     on_release: root._scanPopup.open()
+                Button:
+                    text: 'Configurações'
         Image:
             id:img_con
             size_hint_x:None
@@ -44,3 +46,93 @@
                 size: self.size
         Image:
             source: 'imgs/esteira.png'
+        Label:
+            id: indicaPartida
+            text: '-.-'
+            font_size: 20
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.43, 'y':-0.05}
+            color: 0,0,0,1
+        Label:
+            id: freqRotacao
+            text: '-.- RPM'
+            font_size: 20
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.43, 'y':-0.1}
+            color: 0,0,0,1
+        Label:
+            id: torque
+            text: '-.- N.m'
+            font_size: 20
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.43, 'y':-0.15}
+            color: 0,0,0,1
+        Label:
+            id: tempCarc
+            text: '-.- ºC'
+            font_size: 20
+            bold: True
+            halign: 'center'
+            pos_hint: {'x':-0.43, 'y':-0.2}
+            color: 0,0,0,1
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: (0.1,0.1)
+            pos_hint: {'x':0.855, 'y':0.75}
+            Label:
+                text: 'Carga na esteira'
+                font_size: 20
+                bold: True
+                halign: 'center'
+                color: 0,0,0,1
+            Label:
+                id: cargaPV
+                text: '-.- Kgf/cm²'
+                font_size: 20
+                bold: True
+                halign: 'center'
+                color: 0,0,0,1
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: (0.1,0.1)
+            pos_hint: {'x':0.855, 'y':0.65}
+            Label:
+                text: 'Vel. na esteira'
+                font_size: 20
+                bold: True
+                halign: 'center'
+                color: 0,0,0,1
+            Label:
+                id: velEsteira
+                text: '-.- m/min'
+                font_size: 20
+                bold: True
+                halign: 'center'
+                color: 0,0,0,1
+        Button:
+            size_hint:(None, None)
+            size: (0.8*62, 0.8*58)   # a imagem tem 62x58 pixels
+            background_normal: 'imgs/graph_icon.jpg'
+            background_down: 'imgs/graph_icon.jpg'
+            pos_hint: {'x':0.002, 'y': 0.002}
+
+        Button:
+            text :'PID'
+            pos_hint:{'x':0.75, 'y':0.25}
+            size_hint:(0.2,0.075)
+            padding: 10,10
+            on_release:root._pidPopup.open()
+        Button:
+            text: 'Medições'
+            pos_hint:{'x':0.75, 'y':0.15}
+            size_hint:(0.2,0.075)
+            padding: 10,10
+            on_release:root._medicoesPopup.open()
+        Button:
+            text: 'Dados Históricos'
+            pos_hint:{'x':0.75, 'y':0.05}
+            size_hint:(0.2,0.075)
+            padding: 10,10

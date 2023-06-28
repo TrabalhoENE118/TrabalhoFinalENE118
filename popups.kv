@@ -79,3 +79,91 @@
                 height: 30
                 text: "Fechar"
                 on_release: root.dismiss()
+<PidPopup>:
+    title:"Configuração e dados do PID"
+    size_hint_y: None
+    size_hint_x: 0.8
+    height: 300
+    BoxLayout:
+        orientation: "vertical"
+        GridLayout:
+            cols: 2
+            rows: 2
+            Label: 
+                text: "PV"
+                font_size: 14
+            Label:
+                id: cargaPV
+                text: '-.- Kgf/cm²'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+            
+            Label:
+                text: 'Status do PID'
+                font_size: 14
+            Label:
+                id: statusPID
+                text: 'Desligado'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+            
+<MedicoesPopup>:
+    title:"Medições de variáveis elétricas"
+    size_hint_y: None
+    size_hint_x: 0.8
+    height: 500
+    BoxLayout:
+        orientation: "vertical"
+        GridLayout:
+            cols: 2
+            rows: 5
+            Label:
+                text: "Corrente Média"
+                font_size: 14
+            Label:
+                id: correnteMedia
+                text: '-.- A'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+                
+            Label: 
+                text: "Potência ativa total"
+                font_size: 14
+            Label:
+                id: potAtivaTotal
+                text: '-.- W'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+            Label:
+                text: "Frequência da rede"
+                font_size: 14
+            Label:
+                id: frequencia
+                text: '-.- Hz'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+       
+            Label:
+                text: "Fator de Potência Total"
+                font_size: 14
+            Label:
+                id: fpTotal
+                text: '-.-'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+            Label:
+                text: "Tensão entre as fases R e S"
+                font_size: 14
+            Label:
+                id: tensaoRS
+                text: '-.- V'
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+        
