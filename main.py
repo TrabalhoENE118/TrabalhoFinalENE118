@@ -100,5 +100,4 @@ if __name__ == "__main__":
     MainApp().run()
 
 #ERROS ENCONTRADOS
-#1) Partida direta não reconhecida pela tag indicaPartida
 #2) Carga sobre a esteira PV não muda nem no supervisório da bancada
