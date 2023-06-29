@@ -102,7 +102,7 @@ class MainWidget(BoxLayout):
         self.ids['cargaPV'].text=str(self._meas['values']['cargaPV'])+' kgf/cm²'
         self.ids['freqRotacao'].text=str(self._meas['values']['freqRotacao'])+' RPM'
         partida=self._meas['values']['indicaPartida']
-        if partida==0:
+        if partida==3:
             self.ids['indicaPartida'].text='Direta'
         elif partida==1:
             self.ids['indicaPartida'].text='Soft-Start'

@@ -79,13 +79,16 @@ class MainApp(App):
                 #Indica a partida selecionada(Direta=0, Soft Start=1, Inversor=2)         
                 'tipo':'4X',
                 'div':1.0
-                },
+            },
             'torque':{
                 'addr':1420,
                 #Torque
                 'tipo':'FP',
                 'div':100.0
             }
+        },
+        atuadores={
+
         }
         )
         return self._widget
@@ -95,3 +98,7 @@ if __name__ == "__main__":
     Builder.load_string(open("mainwidget.kv",encoding="utf-8").read(),rulesonly=True)
     Builder.load_string(open("popups.kv",encoding="utf-8").read(),rulesonly=True)
     MainApp().run()
+
+#ERROS ENCONTRADOS
+#1) Partida direta não reconhecida pela tag indicaPartida
+#2) Carga sobre a esteira PV não muda nem no supervisório da bancada
