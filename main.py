@@ -156,3 +156,4 @@ if __name__ == "__main__":
 
 #ERROS ENCONTRADOS
 #2) Carga sobre a esteira PV não muda nem no supervisório da bancada
+#3) Quando fecho a janela o programa trava, por que?
