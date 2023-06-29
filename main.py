@@ -76,7 +76,7 @@ class MainApp(App):
             },
             'indicaPartida':{
                 'addr':1216, 
-                #Indica a partida selecionada(Direta=0, Soft Start=1, Inversor=2)         
+                #Indica a partida selecionada(Direta=3, Soft Start=1, Inversor=2)         
                 'tipo':'4X',
                 'div':1.0
             },
@@ -85,10 +85,64 @@ class MainApp(App):
                 #Torque
                 'tipo':'FP',
                 'div':100.0
+            },
+            'tipoMotor':{
+                'addr':708,
+                #Tipo de motor
+                'tipo':'4X',
+                'div':1.0
             }
             
         },
         atuadores={
+            'partidaInversor':{
+                'addr':1312,
+                #Partida do inversor(0=desligado, 1=ligado, 2=reset)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'partidaSoftStart':{
+                'addr':1316,
+                #Partida do soft start(0=desligado, 1=ligado, 2=reset)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'partidaDireta':{
+                'addr':1319,
+                #Partida direta(0=desligado, 1=ligado, 2=reset)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'velInversor':{
+                'addr':1313,
+                #Velocidade do inversor
+                'tipo':'4X',
+                'div':10.0
+            },
+            'selPID':{
+                'addr':1332,
+                #Seleção do PID(0=automático, 1=manual)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'selTipoPartida':{
+                'addr':1324,
+                #Seleção do tipo de partida(3=direta, 1=soft start, 2=inversor)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'defineSetPoint':{
+                'addr':1302,
+                #Define o set point do PID
+                'tipo':'FP',
+                'div':1.0
+            },
+            'defineMV':{
+                'addr':1310,
+                #Define o MV% do PID
+                'tipo':'FP',
+                'div':1.0
+            }
 
         }
         )

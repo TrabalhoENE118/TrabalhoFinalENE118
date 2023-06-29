@@ -108,7 +108,27 @@
                 font_size: 14
                 haligh: "center"
                 valign: "middle"
-            
+        GridLayout:
+            cols: 2
+            rows:2
+            Label:
+                text: "Defina o Setpoint(SP):"
+                font_size: 14
+            TextInput:
+                id: defineSetpoint
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+                padding: 8,8,8,8
+            Label:
+                text: "MV:"
+                font_size: 14
+            TextInput:
+                id: defineMV
+                font_size: 14
+                haligh: "center"
+                valign: "middle"
+                padding: 8,8,8,8
 <MedicoesPopup>:
     title:"Medições de variáveis elétricas"
     size_hint_y: None

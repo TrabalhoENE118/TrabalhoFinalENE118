@@ -36,6 +36,10 @@ class MainWidget(BoxLayout):
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
             self._tags[key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
+        
+        for key,value in kwargs.get('atuadores').items():
+            self._tags[key]={'addr':value['addr'],'tipo':value['tipo'],'div':value['div']}
+
 
         self._pidPopup=PidPopup()
         self._medicoesPopup=MedicoesPopup()
@@ -109,7 +113,11 @@ class MainWidget(BoxLayout):
         elif partida==2:
             self.ids['indicaPartida'].text='Inversor'
         self.ids['torque'].text=str(self._meas['values']['torque'])+' N.m'
-
+        tipoMotor=self._meas['values']['tipoMotor']
+        if tipoMotor==1:
+            self.ids['tipoMotor'].source='imgs/verde.png'
+        elif tipoMotor==2:
+            self.ids['tipoMotor'].source='imgs/azul.png'
         self._pidPopup.update(self._meas)
         self._medicoesPopup.update(self._meas)
 
