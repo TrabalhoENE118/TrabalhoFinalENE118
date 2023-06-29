@@ -86,6 +86,7 @@ class MainApp(App):
                 'tipo':'FP',
                 'div':100.0
             }
+            
         },
         atuadores={
 
