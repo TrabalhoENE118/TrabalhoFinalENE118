@@ -103,7 +103,7 @@ class MainWidget(BoxLayout):
         '''
         self.ids['tempCarc'].text=str(self._meas['values']['tempCarc'])+' ºC'
         self.ids['velEsteira'].text=str(round(self._meas['values']['velEsteira'],2))+' m/min'
-        self.ids['cargaPV'].text=str(self._meas['values']['cargaPV'])+' kgf/cm²'
+        self.ids['cargaPV'].text=str(round(self._meas['values']['cargaPV'],2))+' kgf/cm²'
         self.ids['freqRotacao'].text=str(self._meas['values']['freqRotacao'])+' RPM'
         partida=self._meas['values']['indicaPartida']
         if partida==3:
@@ -120,6 +120,11 @@ class MainWidget(BoxLayout):
             self.ids['tipoMotor'].source='imgs/azul.png'
         self._pidPopup.update(self._meas)
         self._medicoesPopup.update(self._meas)
+    def stopRefresh(self): 
+        """
+        Método para a parada da atualização da interface gráfica
+        """
+        self._updateWidgets=False
 
     def lerFloat(self,addr):
         """

@@ -142,11 +142,59 @@ class MainApp(App):
                 #Define o MV% do PID
                 'tipo':'FP',
                 'div':1.0
+            },
+            'defineP':{
+                'addr':1304,
+                #Define o P do PID
+                'tipo':'FP',
+                'div':1.0
+            },
+            'defineI':{
+                'addr':1306,
+                #Define o I do PID
+                'tipo':'FP',
+                'div':1.0
+            },
+            'defineD':{
+                'addr':1308,
+                #Define o D do PID
+                'tipo':'FP',
+                'div':1.0
+            },
+            'defineaccInversor':{
+                'addr':1314,
+                #Define a aceleração do inversor(10s a 60s)
+                'tipo':'4X',
+                'div':10.0
+            },
+            'definedccInversor':{
+                'addr':1315,
+                #Define a desaceleração do inversor(10s a 60s)
+                'tipo':'4X',
+                'div':10.0
+            },
+            'defineaccSoftStart':{
+                'addr':1317,
+                #Define a aceleração do soft start(10s a 60s)
+                'tipo':'4X',
+                'div':1.0
+            },
+            'definedccSoftStart':{
+                'addr':1318,
+                #Define a desaceleração do soft start(10s a 60s)
+                'tipo':'4X',
+                'div':1.0
             }
 
         }
         )
         return self._widget
+    def on_stop(self):
+        """
+        Método chamado quando o programa é fechado
+        """
+        self._widget.stopRefresh()
+        
     
 if __name__ == "__main__":
     
@@ -154,6 +202,3 @@ if __name__ == "__main__":
     Builder.load_string(open("popups.kv",encoding="utf-8").read(),rulesonly=True)
     MainApp().run()
 
-#ERROS ENCONTRADOS
-#2) Carga sobre a esteira PV não muda nem no supervisório da bancada
-#3) Quando fecho a janela o programa trava, por que?
