@@ -202,3 +202,5 @@ if __name__ == "__main__":
     Builder.load_string(open("popups.kv",encoding="utf-8").read(),rulesonly=True)
     MainApp().run()
 
+#Dúvidas
+# Perguntar se tem que fazer que apareçam janelas e não popups

@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
-from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup
+from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup,ComandoPopup
 from pyModbusTCP.client import ModbusClient
 from kivy.core.window import Window
 from threading import Thread
@@ -30,6 +30,7 @@ class MainWidget(BoxLayout):
         self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
         self._scanPopup=ScanPopup(scan_time=self._scan_time)
         
+        
         self._meas={}
         self._meas['timestamp']= None
         self._meas['values']={}
@@ -43,6 +44,7 @@ class MainWidget(BoxLayout):
 
         self._pidPopup=PidPopup()
         self._medicoesPopup=MedicoesPopup()
+        self._comandoPopup=ComandoPopup()
         
     def startDataRead(self,ip,port):
         """
@@ -115,11 +117,12 @@ class MainWidget(BoxLayout):
         self.ids['torque'].text=str(self._meas['values']['torque'])+' N.m'
         tipoMotor=self._meas['values']['tipoMotor']
         if tipoMotor==1:
-            self.ids['tipoMotor'].source='imgs/verde.png'
+            self.ids['btnComando'].background_color=(0,1,0,1)
         elif tipoMotor==2:
-            self.ids['tipoMotor'].source='imgs/azul.png'
+            self.ids['btnComando'].background_color=(0,0,1,1)
         self._pidPopup.update(self._meas)
         self._medicoesPopup.update(self._meas)
+        self._comandoPopup.update(self._meas)
     def stopRefresh(self): 
         """
         Método para a parada da atualização da interface gráfica

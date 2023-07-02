@@ -55,10 +55,7 @@
             halign: 'center'
             pos_hint: {'x':-0.43, 'y':-0.05}
             color: 0,0,0,1
-        Image:
-            id: tipoMotor
-            source: 'imgs/verde.png'
-            pos_hint: {'x':-0.34, 'y':-0.13}
+        
         Label:
             id: freqRotacao
             text: '-.- RPM'
@@ -141,3 +138,10 @@
             pos_hint:{'x':0.75, 'y':0.05}
             size_hint:(0.2,0.075)
             padding: 10,10
+        Button:
+            id: btnComando
+            text: 'Comando do Motor'
+            pos_hint:{'x':0.05, 'y':0.5}
+            size_hint:(0.2,0.075)
+            padding: 10,10
+            on_release:root._comandoPopup.open()

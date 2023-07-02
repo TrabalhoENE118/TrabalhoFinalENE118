@@ -71,5 +71,18 @@ class MedicoesPopup(Popup):
         self.ids.frequencia.text = str(medida['values']['frequencia'])
         self.ids.fpTotal.text = str(medida['values']['fpTotal'])
         self.ids.tensaoRS.text = str(medida['values']['tensaoRS'])    
+class ComandoPopup(Popup):
+    """
+    Popup para a configuração dos comandos do motor
+    """
+    def __init__(self,**kwargs):
+        """
+        Construtor da classe ComandoPopup
+        """
+        super().__init__(**kwargs)
+    def update(self,medida):
+        self.ids.definevelInversor.text = str(self.ids.sliderInversor.value)+' Hz'
+        pass
+
 class DataGraphPopup(Popup):
     pass
