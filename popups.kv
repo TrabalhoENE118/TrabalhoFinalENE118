@@ -122,7 +122,7 @@
                     text: "Automático"
                     size: 50, 10
                     group: "Aut/Man"
-                    active: False
+                    active: True
                 Label:
                     text:"Automático"
                 CheckBox:
@@ -130,7 +130,7 @@
                     text: "Manual"
                     size: 50, 10
                     group: "Aut/Man"
-                    active: 
+                    active: False
                 Label:
                     text:"Manual"
         GridLayout:
@@ -266,6 +266,7 @@
                 color: 0, 0, 0, 1
                 padding: 8,8,8,8
                 height: 100
+                on_release: root.setOperacao(1)
               
             Button:
                 background_color: 1, 1, 1, 1
@@ -275,6 +276,7 @@
                 color: 0, 0, 0, 1
                 padding: 8,8,8,8
                 height: 100
+                on_release: root.setOperacao(0)
  
             Button:
                 background_color: 1, 1, 1, 1
@@ -283,6 +285,7 @@
                 color: 0, 0, 0, 1
                 padding: 8,8,8,8
                 height: 100
+                on_release: root.setOperacao(2)
            
         BoxLayout:
             orientation: "vertical"
@@ -299,6 +302,7 @@
                 text: "Partida Direta"
                 color: 0, 0, 0, 1
                 height: 100
+                on_release: root.setPartida('Direta')
       
             Button:
                 background_color: 1, 1, 1, 1
@@ -306,6 +310,7 @@
                 text: "Partida pelo Inversor"
                 color: 0, 0, 0, 1
                 height: 100
+                on_release: root.setPartida('Inversor')
          
             Button:
                 background_color: 1, 1, 1, 1
@@ -313,7 +318,7 @@
                 text: "Partida Soft-Start"
                 color: 0, 0, 0, 1
                 height: 100
-        
+                on_release: root.setPartida('Soft-Start')
         BoxLayout:
             orientation: "vertical"
             spacing:10
@@ -336,20 +341,20 @@
                         cols:2
                         rows:2
                         Label:
-                            text: "Acel."
+                            text: "Acel.(s)"
                         TextInput:
                             id: defineaccInversor
                             font_size: 14
-                            text: "10 s"
+                            text: "10"
                             haligh: "center"
                             valign: "middle"
                             padding: 8,8,8,8
                         Label:
-                            text: "Desacel."
+                            text: "Desacel.(s)"
                         TextInput:
                             id: definedccInversor
                             font_size: 14
-                            text: "10 s"
+                            text: "10"
                             haligh: "center"
                             valign: "middle"
                             padding: 8,8,8,8
@@ -368,12 +373,12 @@
                     BoxLayout:
                         orientation: "vertical"
                         Label:
-                            text:"Velocidade"
+                            text:"Velocidade(Hz)"
                             bold: True
                         TextInput:
                             id: definevelInversor
                             font_size: 14
-                            text: "60 Hz"
+                            text: "60"
                             haligh: "center"
                             valign: "middle"
                             padding: 8,8,8,8

@@ -15,7 +15,7 @@ class MainWidget(BoxLayout):
     """
     Widdget principal da aplicação
     """
-    _tags={}
+    _tags={'modbusaddrs':{},'atuadores':{}}
     _updateThread = None
     _updateWidgets= True
     def __init__(self,**kwargs):
@@ -36,10 +36,10 @@ class MainWidget(BoxLayout):
         self._meas['values']={}
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
-            self._tags[key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
+            self._tags['modbusaddrs'][key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
         
         for key,value in kwargs.get('atuadores').items():
-            self._tags[key]={'addr':value['addr'],'tipo':value['tipo'],'div':value['div']}
+            self._tags['atuadores'][key]={'addr':value['addr'],'tipo':value['tipo'],'div':value['div']}
 
 
         self._pidPopup=PidPopup()
@@ -92,13 +92,22 @@ class MainWidget(BoxLayout):
         """
         self._meas['timestamp']=datetime.now() 
         print("------------------------")
-        for key,value in self._tags.items():
+        for key,value in self._tags['modbusaddrs'].items():
             if value['tipo']=='4X': #Holding Register 16bits
                 self._meas['values'][key]=(self._modbusClient.read_holding_registers(value['addr'],1)[0])/value['div']
                 print(f'{key}={self._meas["values"][key]}')
             elif value['tipo']=='FP': #Floating Point
                 self._meas['values'][key]=(self.lerFloat(value['addr']))/value['div']
                 print(f'{key}={self._meas["values"][key]}')
+
+    def writeData(self,addr,tipo,div,value):
+        """
+        Método para a escrita de dados por meio do protocolo MODBUS
+        """
+        if tipo=='4X':
+            self._modbusClient.write_single_register(addr,value*div)
+        elif tipo=='FP':
+            self.escreverFloat(addr,value*div)
     def updateGUI(self):
         '''
         Método para a atualização da interface gráfica
@@ -123,6 +132,11 @@ class MainWidget(BoxLayout):
         self._pidPopup.update(self._meas)
         self._medicoesPopup.update(self._meas)
         self._comandoPopup.update(self._meas)
+        #Atuadores: #addr #tipo #div #value
+        for key,value in self._tags['atuadores'].items():
+            self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+            
+            
     def stopRefresh(self): 
         """
         Método para a parada da atualização da interface gráfica
@@ -137,5 +151,13 @@ class MainWidget(BoxLayout):
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder=Endian.Big, wordorder=Endian.Little)
         decoded = decoder.decode_32bit_float()
         return decoded
+    def escreveFloat(self,addr,float):
+        """
+        Método para a escrita de um "float" na tabela MODBUS
+        """
+        builder = BinaryPayloadBuilder()
+        builder.add_32bit_float(float)
+        payload = builder.to_registers()
+        return self._modbusClient.write_multiple_registers(addr,payload)
             
         
