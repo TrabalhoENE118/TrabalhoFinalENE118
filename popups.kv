@@ -373,7 +373,7 @@
                     BoxLayout:
                         orientation: "vertical"
                         Label:
-                            text:"Velocidade(Hz)"
+                            text:"Velocidade(0 a 60Hz)"
                             bold: True
                         TextInput:
                             id: definevelInversor
@@ -391,7 +391,10 @@
                     max: 60
                     value: 0
                     step: 1
+                    on_touch_move:
+                        root._velInversor[0]=sliderInversor.value
                     orientation: 'vertical'
+
        
       
      

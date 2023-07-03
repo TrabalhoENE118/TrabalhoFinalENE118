@@ -90,7 +90,7 @@ class ComandoPopup(Popup):
     """
     _partida=None
     _operacao=None
-    
+    _velInversor=[None] #é uma lista para que o valor possa ser alterado dentro do pelo slider (Listas são mutáveis!!!)
 
     def __init__(self,**kwargs):
         """
@@ -98,11 +98,11 @@ class ComandoPopup(Popup):
         """
         super().__init__(**kwargs)
     def update(self,medida):
-        self.ids.definevelInversor.text = str(self.ids.sliderInversor.value)
         aceleracao=int(self.ids.defineaccInversor.text)
         desaceleracao=int(self.ids.definedccInversor.text)
-        velInversor=int(self.ids.definevelInversor.text)
-        print(f'Velocidade do inversor:{velInversor}')
+        if self._velInversor[0] is None:
+            self._velInversor[0]=int(self.ids.definevelInversor.text)
+        print(f'Velocidade do inversor:{self._velInversor}')
         if self._partida is not None and self._operacao is not None:
             if self._partida== 'Direta':
                 medida['values']['partidaDireta']=self._operacao
@@ -114,7 +114,7 @@ class ComandoPopup(Popup):
                 medida['values']['partidaInversor']=self._operacao
                 medida['values']['defineaccInversor']=aceleracao
                 medida['values']['definedccInversor']=desaceleracao
-                medida['values']['definevelInversor']=velInversor
+                medida['values']['definevelInversor']=self._velInversor[0]
 
     def setPartida(self,partida):
         self._partida=partida
