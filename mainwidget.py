@@ -28,7 +28,7 @@ class MainWidget(BoxLayout):
         self._server_port=kwargs.get('server_port')
         self._modbusClient=ModbusClient(host=self._server_ip,port=self._server_port)
         self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
-        self._scanPopup=ScanPopup(scan_time=self._scan_time)
+        self._scanPopup=ScanPopup(self._scan_time)
         
         
         self._meas={}

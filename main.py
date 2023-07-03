@@ -10,7 +10,7 @@ class MainApp(App):
         """
         Método que gera o aplicativo com o widget principal
         """
-        self._widget=MainWidget(scantime=1000,server_ip='localhost',server_port=502,
+        self._widget=MainWidget(scan_time=1000,server_ip='localhost',server_port=502,
         modbus_addrs={
             'tempCarc':{
                 'addr':706, 

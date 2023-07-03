@@ -27,12 +27,12 @@ class ScanPopup(Popup):
     """
     Popup para a configuração do tempo de varredura
     """
-    def __init__(self,scan_time,**kwargs):
+    def __init__(self,scantime,**kwargs):
         """
         Construtor da classe ScanPopup
         """
         super().__init__(**kwargs)
-        self.ids.txt_st.text = str(scan_time)
+        self.ids.txt_st.text = str(scantime)
 
 class PidPopup(Popup):
     """
