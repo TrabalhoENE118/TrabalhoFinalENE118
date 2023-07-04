@@ -38,12 +38,19 @@ class PidPopup(Popup):
     """
     Popup para a configuração do PID
     """
-    
+    _SP=None
+    _MV=None
+    _P=None
+    _I=None
+    _D=None
     def __init__(self,**kwargs):
         """
         Construtor da classe PidPopup
         """
         super().__init__(**kwargs)
+        self._P=float(self.ids.defineP.text)
+        self._I=float(self.ids.defineI.text)
+        self._D=float(self.ids.defineD.text)
     def update(self,medida):
         """
         Método utilizado para atualizar os valores do PID
@@ -60,12 +67,23 @@ class PidPopup(Popup):
             medida['values']['selPID']=0
         else:
             medida['values']['selPID']=1
-        medida['values']['defineSetpoint']=int(self.ids.defineSetpoint.text)
-        medida['values']['defineMv']=int(self.ids.defineMV.text)
-        medida['values']['defineP']=int(self.ids.defineP.text)
-        medida['values']['defineI']=int(self.ids.defineI.text)
-        medida['values']['defineD']=int(self.ids.defineD.text)
-        
+        medida['values']['defineMV']=self._MV
+        medida['values']['defineSetPoint']=self._SP
+        medida['values']['defineP']=self._P
+        medida['values']['defineI']=self._I
+        medida['values']['defineD']=self._D
+    def setSetPoint(self):
+        self._SP= float(self.ids.defineSetPoint.text) 
+
+    def setMV(self):
+        self._MV= float(self.ids.defineMV.text)
+    def setP(self):
+        self._P= float(self.ids.defineP.text)
+    def setI(self):
+        self._I= float(self.ids.defineI.text)
+    def setD(self):
+        self._D= float(self.ids.defineD.text)
+
 class MedicoesPopup(Popup):
     """
     Popup para a configuração das medições
@@ -90,37 +108,51 @@ class ComandoPopup(Popup):
     """
     _partida=None
     _operacao=None
-    _velInversor=[None] #é uma lista para que o valor possa ser alterado dentro do pelo slider (Listas são mutáveis!!!)
-
+    _velInversor=None
+    _aceleracao=None
+    _desaceleracao=None
     def __init__(self,**kwargs):
         """
         Construtor da classe ComandoPopup
         """
         super().__init__(**kwargs)
     def update(self,medida):
-        aceleracao=int(self.ids.defineaccInversor.text)
-        desaceleracao=int(self.ids.definedccInversor.text)
-        if self._velInversor[0] is None:
-            self._velInversor[0]=int(self.ids.definevelInversor.text)
-        print(f'Velocidade do inversor:{self._velInversor}')
+        medida['values']['partidaDireta']=None
+        medida['values']['partidaSoftStart']=None
+        medida['values']['defineaccSoftStart']=None
+        medida['values']['definedccSoftStart']=None
+        medida['values']['partidaInversor']=None
+        medida['values']['defineaccInversor']=None
+        medida['values']['definedccInversor']=None
+        medida['values']['velInversor']=None
+        medida['values']['selTipoPartida']=None
+
         if self._partida is not None and self._operacao is not None:
             if self._partida== 'Direta':
                 medida['values']['partidaDireta']=self._operacao
+                medida['values']['selTipoPartida']=3
             elif self._partida == 'Soft-start':
                 medida['values']['partidaSoftStart']=self._operacao
-                medida['values']['defineaccSoftStart']=aceleracao
-                medida['values']['definedccSoftStart']=desaceleracao
+                medida['values']['defineaccSoftStart']=self._aceleracao
+                medida['values']['definedccSoftStart']=self._desaceleracao
+                medida['values']['selTipoPartida']=1
             elif self._partida == 'Inversor':
                 medida['values']['partidaInversor']=self._operacao
-                medida['values']['defineaccInversor']=aceleracao
-                medida['values']['definedccInversor']=desaceleracao
-                medida['values']['definevelInversor']=self._velInversor[0]
-
+                medida['values']['defineaccInversor']=self._aceleracao
+                medida['values']['definedccInversor']=self._desaceleracao
+                medida['values']['velInversor']=self._velInversor
+                medida['values']['selTipoPartida']=2
     def setPartida(self,partida):
         self._partida=partida
     def setOperacao(self,operacao):
         self._operacao=operacao
-
-
+    def setAcc(self):
+        self._aceleracao=float(self.ids.defineaccInversor.text)
+    def setDcc(self):
+        self._desaceleracao=float(self.ids.definedccInversor.text)
+    def setVelInversor(self):
+        self._velInversor=int(self.ids.velInversor.text)
+    def setVelInversorSlider(self,vel):
+        self._velInversor=vel
 class DataGraphPopup(Popup):
     pass

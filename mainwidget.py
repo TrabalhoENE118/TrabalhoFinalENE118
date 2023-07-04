@@ -30,7 +30,6 @@ class MainWidget(BoxLayout):
         self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
         self._scanPopup=ScanPopup(self._scan_time)
         
-        
         self._meas={}
         self._meas['timestamp']= None
         self._meas['values']={}
@@ -104,10 +103,11 @@ class MainWidget(BoxLayout):
         """
         Método para a escrita de dados por meio do protocolo MODBUS
         """
+        
         if tipo=='4X':
-            self._modbusClient.write_single_register(addr,value*div)
+            self._modbusClient.write_single_register(addr,int(value*div))
         elif tipo=='FP':
-            self.escreverFloat(addr,value*div)
+            self.escreveFloat(addr,value*div)
     def updateGUI(self):
         '''
         Método para a atualização da interface gráfica
@@ -133,8 +133,12 @@ class MainWidget(BoxLayout):
         self._medicoesPopup.update(self._meas)
         self._comandoPopup.update(self._meas)
         #Atuadores: #addr #tipo #div #value
+        print("------------------------")
+        print("Atuadores:")
         for key,value in self._tags['atuadores'].items():
-            self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+            print(f'{key}={self._meas["values"][key]}')
+            if self._meas['values'][key]!=None:
+                self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
             
             
     def stopRefresh(self): 
