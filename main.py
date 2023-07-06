@@ -204,3 +204,5 @@ if __name__ == "__main__":
 
 #Dúvidas
 # Perguntar se tem que fazer que apareçam janelas e não popups
+# por que aparece debub na resposta de alguns sensores
+# por que trava quando eu tento selecionar texto nos atuadores?
