@@ -18,6 +18,7 @@ class MainWidget(BoxLayout):
     _tags={'modbusaddrs':{},'atuadores':{}}
     _updateThread = None
     _updateWidgets= True
+    _anterior={'inicio':1}
     def __init__(self,**kwargs):
         """
         Construtor do widget principal
@@ -64,12 +65,12 @@ class MainWidget(BoxLayout):
                 self._updateThread.start()
                 self.ids.img_con.source= 'imgs/conectado.png'
                 self._modbusPopup.dismiss()
+                self._configInicial()
              
             else:
                 self._modbusPopup.setInfo('Erro na conexão com o servidor')
         except Exception as e:
             print("Erro:",e.args)
-    
     def updater(self):
         """
         Método que invoca as rotinas de leitura de dados, atualização da interface e inserção dos dados no Banco de dados
@@ -135,10 +136,23 @@ class MainWidget(BoxLayout):
         #Atuadores: #addr #tipo #div #value
         print("------------------------")
         print("Atuadores:")
-        for key,value in self._tags['atuadores'].items():
-            print(f'{key}={self._meas["values"][key]}')
-            if self._meas['values'][key]!=None:
-                self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+        if self._anterior['inicio']==1:
+            print("Configuração inicial")
+            for key,value in self._tags['atuadores'].items():
+                print(f'{key}={self._meas["values"][key]}')
+                if self._meas['values'][key]!=None: #Configuração inicial
+                    self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                self._anterior[key]=self._meas['values'][key]
+                self._anterior['inicio']=0
+        else:
+            for key,value in self._tags['atuadores'].items():
+                if self._meas['values'][key]!=None and self._meas['values'][key]!=self._anterior[key]:
+                    print(f'{key}={self._meas["values"][key]}')
+                    self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                    self._anterior[key]=self._meas['values'][key]
+
+            
+        
             
             
     def stopRefresh(self): 

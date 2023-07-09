@@ -10,7 +10,7 @@ class MainApp(App):
         """
         Método que gera o aplicativo com o widget principal
         """
-        self._widget=MainWidget(scan_time=1000,server_ip='localhost',server_port=502,
+        self._widget=MainWidget(scan_time=1000,server_ip='192.168.0.11',server_port=502,
         modbus_addrs={
             'tempCarc':{
                 'addr':706, 
@@ -203,6 +203,11 @@ if __name__ == "__main__":
     MainApp().run()
 
 #Dúvidas
-# Perguntar se tem que fazer que apareçam janelas e não popups
-# por que aparece debub na resposta de alguns sensores
-# por que trava quando eu tento selecionar texto nos atuadores?
+
+
+# Só escrever quando houver mudança de valor
+# Preset de valores iniciais
+
+# Dados em tempo real
+# Banco de dados
+# Arrumei o soft start

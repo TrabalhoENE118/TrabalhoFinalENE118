@@ -16,7 +16,7 @@
                 font_size: 14
             TextInput:
                 id: txt_ip
-                text: "localhost"
+                text: "192.168.0.11"
                 font_size: 14
                 haligh: "center"
                 valign: "middle"
@@ -363,6 +363,7 @@
                             padding: 8,8,8,8
                             on_text_validate: root.setAcc()
                             multiline: False
+
                         Label:
                             text: "Desacel.(s)"
                         TextInput:
@@ -409,7 +410,7 @@
                     value: 0
                     step: 1
                     on_touch_move:
-                        root.setVelInversorSlider(value)
+                        root.setVelInversorSlider(self.value)
                     orientation: 'vertical'
 
        
