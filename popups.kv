@@ -413,6 +413,142 @@
                         root.setVelInversorSlider(self.value)
                     orientation: 'vertical'
 
+<DataGraphPopup>:
+    title: " Gráfico de dados"
+    BoxLayout:
+        orientation: "vertical"
+        TimeSeriesGraph:
+            id: graph
+            xlabel: "Tempo"
+            ylabel: "Potência Ativa Total[W]"
+            background_color: 0.5, 0.5, 0.5, 0.5
+            x_ticks_minor: 5
+            x_ticks_major: 10
+            y_ticks_major: 100
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin: 0 #xmax definido na classe DataGraphPopup
+            ymin: 0
+            ymax: 500
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: (1,0.08)
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: (0.5,1)
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint: (0.3,1)
+                    Button: 
+                        text: "Escolha do dado"
+                        on_release: app.root._selectData.open()
+                    
+                Label:
+                    text: "Número de pontos do gráfico"
+                    size_hint: (0.3,1)
+                LabeledCheckBoxDataGraph:
+                    id:mp20
+                    on_kv_post: 
+                        self.ids.label.text = '20'
+                        self.ids.checkbox.group = 'cb_group'
+                        self.ids.checkbox.active = True 
+                LabeledCheckBoxDataGraph:
+                    id:mp50
+                    on_kv_post: 
+                        self.ids.label.text = '50'
+                        self.ids.checkbox.group = 'cb_group'
+                LabeledCheckBoxDataGraph:
+                    id:mp100
+                    on_kv_post: 
+                        self.ids.label.text = '100'
+                        self.ids.checkbox.group = 'cb_group'
+                Button:
+                    text: "Fechar"
+                    size_hint: (0.2,1)
+                    on_release: root.dismiss()
+<LabeledCheckBoxDataGraph>:
+    orientation: "horizontal"
+    size_hint: (0.1,1)
+    CheckBox:
+        id: checkbox
+        on_active: app.root._graph.ids.graph.setMaxPoints(int(label.text),0) if app.root is not None else None
+    Label:
+        id: label
+<SelectDataGraphPopup>:
+    title: " Escolha do dado"
+    size_hint_y: 1
+    size_hint_x: 0.8
+    BoxLayout:
+        orientation: "horizontal"
+        BoxLayout:
+            orientation: "vertical"
+            CheckBox:
+                id: checktempCarc
+                group: "select_group"
+                on_active: app.root._selection='tempCarc' if app.root is not None else None
+            CheckBox:
+                id: checkvelEsteira
+        
+                group: "select_group"
+                on_active: app.root._selection='velEsteira' if app.root is not None else None
+            CheckBox:
+                id: checkcargaPV
+    
+                group: "select_group"
+                on_active: app.root._selection='cargaPV' if app.root is not None else None
+            CheckBox:
+                id: checktensaoRS
+    
+                group: "select_group"
+                on_active: app.root._selection='tensaoRS' if app.root is not None else None
+            CheckBox:
+                id: checkfrequencia
+                group: "select_group"
+                on_active: app.root._selection='frequencia' if app.root is not None else None
+            CheckBox:
+                id: checkcorrenteMedia
+                active: True
+                group: "select_group"
+                on_active: app.root._selection='correnteMedia' if app.root is not None else None
+            CheckBox:
+                id: checkpotAtiva
+ 
+                group: "select_group"
+                
+                on_active: app.root._selection='potAtivaTotal' if app.root is not None else None
+            CheckBox:
+                id: checkfpTotal
        
-      
-     
+                group: "select_group"
+                on_active: app.root._selection='fpTotal' if app.root is not None else None
+            CheckBox:
+                id: checkTorque
+             
+                group: "select_group"
+                on_active: app.root._selection='torque' if app.root is not None else None
+        BoxLayout:
+            orientation: "vertical"
+            Label:
+                text: "Temperatura na carcaça (ºC)"
+            Label:
+                text: "Velocidade da esteira (m/min)"
+            Label:
+                text: "Carga do motor (Kgf/m²)"
+            Label:
+                text: "Tensão R-S (V)"
+            Label:
+                text: "Frequência da rede (Hz)"
+            Label:
+                text: "Corrente Média (A)"
+            Label:
+                text: "Potência ativa total (W)"
+            Label:
+                text: "Fator de potência total"
+            Label:
+                text: "Torque (N.m)"
+            
+
+        

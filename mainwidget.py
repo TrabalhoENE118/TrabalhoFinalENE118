@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
-from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup,ComandoPopup
+from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup,ComandoPopup,DataGraphPopup,SelectDataGraphPopup
 from pyModbusTCP.client import ModbusClient
 from kivy.core.window import Window
 from threading import Thread
@@ -9,7 +9,7 @@ import random
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.payload import BinaryPayloadBuilder
 from pymodbus.constants import Endian
-
+from timeseriesgraph import TimeSeriesGraph
 
 class MainWidget(BoxLayout):
     """
@@ -19,6 +19,7 @@ class MainWidget(BoxLayout):
     _updateThread = None
     _updateWidgets= True
     _anterior={'inicio':1}
+    _max_points=20
     def __init__(self,**kwargs):
         """
         Construtor do widget principal
@@ -36,7 +37,7 @@ class MainWidget(BoxLayout):
         self._meas['values']={}
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
-            self._tags['modbusaddrs'][key]={'addr':value['addr'],'color':plot_color,'tipo':value['tipo'],'div':value['div']}
+            self._tags['modbusaddrs'][key]={'addr':value['addr'],'color':plot_color,'legenda':value['legenda'],'tipo':value['tipo'],'div':value['div']}
         
         for key,value in kwargs.get('atuadores').items():
             self._tags['atuadores'][key]={'addr':value['addr'],'tipo':value['tipo'],'div':value['div']}
@@ -45,6 +46,13 @@ class MainWidget(BoxLayout):
         self._pidPopup=PidPopup()
         self._medicoesPopup=MedicoesPopup()
         self._comandoPopup=ComandoPopup()
+        self._selection='potAtivaTotal'
+        self._selectData= SelectDataGraphPopup()
+
+        for key,value in self._tags['modbusaddrs'].items():
+            print(self._selection)
+            if self._selection == key:
+                self._graph=DataGraphPopup(self._max_points,self._tags['modbusaddrs'][key]['color'])
         
     def startDataRead(self,ip,port):
         """
@@ -65,7 +73,6 @@ class MainWidget(BoxLayout):
                 self._updateThread.start()
                 self.ids.img_con.source= 'imgs/conectado.png'
                 self._modbusPopup.dismiss()
-                self._configInicial()
              
             else:
                 self._modbusPopup.setInfo('Erro na conexão com o servidor')
@@ -152,9 +159,10 @@ class MainWidget(BoxLayout):
                     self._anterior[key]=self._meas['values'][key]
 
             
-        
-            
-            
+        #Atualização do gráfico
+        print(self._tags['modbusaddrs'][self._selection]['legenda'])
+        self._graph.ids.graph.updateGraph((self._meas['timestamp'],self._meas['values'][self._selection]),0)
+        self._graph.ids.graph.ylabel= self._tags['modbusaddrs'][self._selection]['legenda']
     def stopRefresh(self): 
         """
         Método para a parada da atualização da interface gráfica

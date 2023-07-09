@@ -14,81 +14,81 @@ class MainApp(App):
         modbus_addrs={
             'tempCarc':{
                 'addr':706, 
-                #Temperatura da carcaça
+                'legenda': 'Temperatura da carcaça(ºC)',
                 'tipo':'FP',
                 'div':10.0
             },
             'velEsteira':{
                 'addr':724, 
-                #Velocidade da esteira
+                'legenda': 'Velocidade da esteira(m/min)',
                 'tipo':'FP',
                 'div':1.0
             },
             'cargaPV':{
                 'addr':710,
-                #Valor lido da carga na esteira(PV) 
+                'legenda': 'Carga sobre a esteira(Kgf/m²)',
                 'tipo':'FP',
                 'div':1.0
 
             },
             'tensaoRS':{
                 'addr':847,
-                #Valor de ddp entre R e S   
+                'legenda': 'Tensão entre R e S(V)',   
                 'tipo':'4X',
                 'div':10.0
             },
             'statusPID':{
                 'addr':722,
-                #Status do PID     
+                'legenda': 'Status do PID',
                 'tipo':'4X',
                 'div':1.0
             },
             'frequencia':{
                 'addr':830,
-                #Frequência da rede
+                'legenda': 'Frequência da rede(Hz)',
                 'tipo':'4X',
                 'div':100.0
             }   ,
             'correnteMedia':{
                 'addr':845,
-                #Corrente média     
+                'legenda': 'Corrente média(A)',
                 'tipo':'4X',
                 'div':100.0
             },
             'potAtivaTotal':{
                 'addr':855,
-                #Potência ativa total
+                'legenda': 'Potência ativa total(W)',
                 'tipo':'4X',
                 'div':1.0
 
             },
             'fpTotal':{
                 'addr':871,
-                #Fator de potência total
+                'legenda': 'Fator de potência total',
                 'tipo':'4X',
                 'div':1000.0
             },
             'freqRotacao':{
                 'addr':884,
-                #Frequência de rotação
+                'legenda': 'Frequência de rotação(Hz)',
                 'tipo':'FP',
                 'div':1.0
             },
             'indicaPartida':{
                 'addr':1216, 
-                #Indica a partida selecionada(Direta=3, Soft Start=1, Inversor=2)         
+                'legenda': 'Indica partida(0=desligado, 1=ligado)',      
                 'tipo':'4X',
                 'div':1.0
             },
             'torque':{
                 'addr':1420,
-                #Torque
+                'legenda': 'Torque(N.m)',
                 'tipo':'FP',
                 'div':100.0
             },
             'tipoMotor':{
                 'addr':708,
-                #Tipo de motor
+                'legenda': 'Tipo de motor',
                 'tipo':'4X',
                 'div':1.0
             }
@@ -207,6 +207,7 @@ if __name__ == "__main__":
 
 # Só escrever quando houver mudança de valor
 # Preset de valores iniciais
+#consegui fazer
 
 # Dados em tempo real
 # Banco de dados

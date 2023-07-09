@@ -3,7 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from pymodbus.payload import BinaryPayloadBuilder
 from pymodbus.constants import Endian
-
+from kivy_garden.graph import LinePlot
 class ModbusPopup(Popup):
     """
     Popup para a configuração do protocolo MODBUS
@@ -171,4 +171,13 @@ class ComandoPopup(Popup):
         self._velInversor=vel
         print(self._velInversor)
 class DataGraphPopup(Popup):
+    def __init__(self,xmax,plot_color,**kwargs):
+        super().__init__(**kwargs)
+        self.plot = LinePlot(line_width=1.5,color=plot_color)
+        self.ids.graph.add_plot(self.plot)
+        self.ids.graph.xmax = xmax
+class LabeledCheckBoxDataGraph(BoxLayout):
     pass
+class SelectDataGraphPopup(Popup):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
