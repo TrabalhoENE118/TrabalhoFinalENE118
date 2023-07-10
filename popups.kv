@@ -551,4 +551,70 @@
                 text: "Torque (N.m)"
             
 
-        
+<HistGraphPopup>:
+    title: " Histórico de dados"
+    BoxLayout:
+        orientation: "vertical"
+        TimeSeriesGraph:
+            id: graph
+            xlabel: "Tempo"
+            ylabel: "Potência Ativa Total[W]"
+            background_color: 0.5, 0.5, 0.5, 0.5
+            x_ticks_minor: 5
+            x_ticks_major: 10
+            y_ticks_major: 100
+            y_grid_label: True
+            x_grid_label: True
+            padding: 5
+            x_grid: True
+            y_grid: True
+            xmin: 0 #xmax definido na classe DataGraphPopup
+            ymin: 0
+            ymax: 500
+        BoxLayout:
+            id: sensores
+            orientation: "horizontal"
+            size_hint: (1,0.1)
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: (1,0.1)
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: (0.5,1)
+                Label:
+                    text: "Timestamp inicial \r\n [size=12](DD/MM/AAAA HH:MM:SS)[/size]"
+                    halign: "center"
+                    markup: True
+                TextInput:
+                    id: txt_init_time
+                    multiline: False
+                    size_hint: (1,0.8)
+                    halign: "center"
+                    valign: "middle"
+                Label:
+                    text: "Timestamp final \r\n [size=12](DD/MM/AAAA HH:MM:SS)[/size]"
+                    halign: "center"
+                    markup: True
+                TextInput:
+                    id: txt_final_time
+                    multiline: False
+                    size_hint: (1,0.8)
+                    halign: "center"
+                    valign: "middle"
+                Button:
+                    text: "Fechar"
+                    size_hint: (1,0.8)
+                    on_release: root.dismiss()
+<LabeledCheckBoxHistGraph>:
+    orientation: "horizontal"
+    size_hint: (0.05,1)
+    BoxLayout:
+        orientation: "vertical"
+        CheckBox:
+            id: checkbox
+            on_active: app.root.getDataDB()
+        Label:
+            id: label
+            font_size: 10
+            bold: True

@@ -1,5 +1,5 @@
 from kivy.uix.boxlayout import BoxLayout
-from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup,ComandoPopup,DataGraphPopup,SelectDataGraphPopup
+from popups import ModbusPopup,ScanPopup,PidPopup,MedicoesPopup,ComandoPopup,DataGraphPopup,SelectDataGraphPopup, HistGraphPopup
 from pyModbusTCP.client import ModbusClient
 from kivy.core.window import Window
 from threading import Thread
@@ -10,7 +10,11 @@ from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.payload import BinaryPayloadBuilder
 from pymodbus.constants import Endian
 from timeseriesgraph import TimeSeriesGraph
-
+from threading import Lock
+from tabulate import tabulate
+from db import Base,Session,engine
+from models import DadosEsteira
+from kivy_garden.graph import LinePlot
 class MainWidget(BoxLayout):
     """
     Widdget principal da aplicação
@@ -20,6 +24,7 @@ class MainWidget(BoxLayout):
     _updateWidgets= True
     _anterior={'inicio':1}
     _max_points=20
+    _dados={}
     def __init__(self,**kwargs):
         """
         Construtor do widget principal
@@ -32,6 +37,10 @@ class MainWidget(BoxLayout):
         self._modbusPopup=ModbusPopup(server_ip=self._server_ip,server_port=self._server_port)
         self._scanPopup=ScanPopup(self._scan_time)
         
+        self._session=Session()
+        Base.metadata.create_all(engine)
+        self._lock=Lock()
+
         self._meas={}
         self._meas['timestamp']= None
         self._meas['values']={}
@@ -50,10 +59,10 @@ class MainWidget(BoxLayout):
         self._selectData= SelectDataGraphPopup()
 
         for key,value in self._tags['modbusaddrs'].items():
-            print(self._selection)
             if self._selection == key:
                 self._graph=DataGraphPopup(self._max_points,self._tags['modbusaddrs'][key]['color'])
         
+        self._hgraph= HistGraphPopup(tags=self._tags['modbusaddrs'])
     def startDataRead(self,ip,port):
         """
         Método utilizado para a configuração do IP e porta 
@@ -70,7 +79,9 @@ class MainWidget(BoxLayout):
             Window.set_system_cursor('arrow')
             if self._modbusClient.is_open:
                 self._updateThread = Thread(target=self.updater)
+                self._dataBankThread = Thread(target=self.updateDataBank)
                 self._updateThread.start()
+                self._dataBankThread.start()
                 self.ids.img_con.source= 'imgs/conectado.png'
                 self._modbusPopup.dismiss()
              
@@ -86,26 +97,77 @@ class MainWidget(BoxLayout):
             while self._updateWidgets:
                 self.readData()
                 self.updateGUI()
+                self.updateDataBank()
                 #Atualiza o banco de dados
                 sleep(self._scan_time/1000)
         except Exception as e:
             self._modbusClient.close()
             print("Erro:",e.args)
 
+    def updateDataBank(self):
+        """
+        Método para a inserção dos dados no Banco de dados
+        """
+        try:
+            self._dados['timestamp']=self._meas['timestamp']
+            for key in self._tags['modbusaddrs']:
+                self._dados[key]=self._meas['values'][key]
+            dado=DadosEsteira(**self._dados)
+            print(self._dados)
+            self._lock.acquire()
+            self._session.add(dado)
+            self._session.commit()
+            self._lock.release()
+        except Exception as e:
+            print("Erro na atualização do banco:",e.args)
+    def getDataDB(self):
+        """
+        Método que coleta as informações da interface pelo usuário
+        e requisita a busca no Banco de dados
+        """
+        try:
+            init_t=self._hgraph.ids.txt_init_time.text
+            final_t=self._hgraph.ids.txt_final_time.text
+            init_t=datetime.strptime(init_t,'%d/%m/%Y %H:%M:%S')
+            final_t=datetime.strptime(final_t,'%d/%m/%Y %H:%M:%S')
+            
+            #for sensor in self._hgraph.ids.sensores.children:
+            #    if sensor.ids.checkbox.active:
                 
+            if init_t is None or final_t is None:
+                return
+            self._lock.acquire()
+            results=self._session.query(DadosEsteira).filter(DadosEsteira.timestamp.between(init_t,final_t)).all()
+            self._lock.release()
+            
+            if results is None or len(results['timestamp'])==0:
+                return
+            self._hgraph.ids.graph.clearPlots()
+
+            for key,value in results.items():
+                if key=='timestamp':
+                    continue
+                p = LinePlot(line_width=1,color=self._tags['modbusaddrs'][key]['color'])
+                p.points = [(i, value[i]) for i in range(0,len(value))]
+                self._hgraph.ids.graph.add_plot(p)
+            self._hgraph.ids.graph.xmax=len(results['timestamp'])
+            self._hgraph.ids.update_x_labels(datetime.strptime(x,'%d/%m/%Y %H:%M:%S') for x in results['timestamp'])
+        except Exception as e:
+            print("Erro na busca no banco:",e.args)
+
     def readData(self):
         """
         Método para a leitura dos dados por meio do protocolo MODBUS
         """
         self._meas['timestamp']=datetime.now() 
+        
         print("------------------------")
         for key,value in self._tags['modbusaddrs'].items():
             if value['tipo']=='4X': #Holding Register 16bits
-                self._meas['values'][key]=(self._modbusClient.read_holding_registers(value['addr'],1)[0])/value['div']
-                print(f'{key}={self._meas["values"][key]}')
+                self._meas['values'][key]=(self._modbusClient.read_holding_registers(value['addr'],1)[0])/value['div']      
+        
             elif value['tipo']=='FP': #Floating Point
                 self._meas['values'][key]=(self.lerFloat(value['addr']))/value['div']
-                print(f'{key}={self._meas["values"][key]}')
 
     def writeData(self,addr,tipo,div,value):
         """
@@ -160,9 +222,9 @@ class MainWidget(BoxLayout):
 
             
         #Atualização do gráfico
-        print(self._tags['modbusaddrs'][self._selection]['legenda'])
         self._graph.ids.graph.updateGraph((self._meas['timestamp'],self._meas['values'][self._selection]),0)
         self._graph.ids.graph.ylabel= self._tags['modbusaddrs'][self._selection]['legenda']
+
     def stopRefresh(self): 
         """
         Método para a parada da atualização da interface gráfica

@@ -17,6 +17,7 @@ class MainApp(App):
                 'legenda': 'Temperatura da carcaça(ºC)',
                 'tipo':'FP',
                 'div':10.0
+                
             },
             'velEsteira':{
                 'addr':724, 
