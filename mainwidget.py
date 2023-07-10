@@ -113,7 +113,6 @@ class MainWidget(BoxLayout):
             for key in self._tags['modbusaddrs']:
                 self._dados[key]=self._meas['values'][key]
             dado=DadosEsteira(**self._dados)
-            print(self._dados)
             self._lock.acquire()
             self._session.add(dado)
             self._session.commit()
@@ -139,19 +138,30 @@ class MainWidget(BoxLayout):
             self._lock.acquire()
             results=self._session.query(DadosEsteira).filter(DadosEsteira.timestamp.between(init_t,final_t)).all()
             self._lock.release()
-            
-            if results is None or len(results['timestamp'])==0:
+            results = [reg.get_resultsdic() for reg in results]
+            sensorAtivo=[]
+            for sensor in self._hgraph.ids.sensores.children:
+                if sensor.ids.checkbox.active:
+                    sensorAtivo.append(sensor.ids.label.text)
+            if results is None or len(results)==0:
                 return
             self._hgraph.ids.graph.clearPlots()
-
-            for key,value in results.items():
-                if key=='timestamp':
-                    continue
-                p = LinePlot(line_width=1,color=self._tags['modbusaddrs'][key]['color'])
-                p.points = [(i, value[i]) for i in range(0,len(value))]
-                self._hgraph.ids.graph.add_plot(p)
-            self._hgraph.ids.graph.xmax=len(results['timestamp'])
-            self._hgraph.ids.update_x_labels(datetime.strptime(x,'%d/%m/%Y %H:%M:%S') for x in results['timestamp'])
+            tempo=[]
+            for i in results:
+                for key,value in i.items():
+                    if key=='timestamp':
+                        tempo.append(value)
+                        continue
+                    elif key=='id':
+                        continue
+                    for s in sensorAtivo:
+                        if key==s:
+                            p= LinePlot(line_width=1,color=self._tags['modbusaddrs'][key]['color'])
+                            p.points = [(x, results[x][key]) for x in range(0,len(results))]
+                            self._hgraph.ids.graph.add_plot(p)
+            self._hgraph.ids.graph.xmax=len(results)
+            print(tempo)
+            self._hgraph.ids.update_x_labels(tempo)
         except Exception as e:
             print("Erro na busca no banco:",e.args)
 

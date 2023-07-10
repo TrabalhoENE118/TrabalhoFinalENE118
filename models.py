@@ -22,20 +22,20 @@ class DadosEsteira(Base):
     torque = Column(Float)
     tipoMotor = Column(Integer)
 
-    def get_attr_printable_list(self):
-        return [self.id,
-        self.timestamp.strftime('%d/%m/%Y %H:%M:%S'),
-        self.tempCarc,
-        self.velEsteira,
-        self.cargaPV,
-        self.tensaoRS,
-        self.statusPID,
-        self.frequencia,
-        self.correnteMedia,
-        self.potAtivaTotal,
-        self.fpTotal,
-        self.freqRotacao,
-        self.indicaPartida,
-        self.torque,
-        self.tipoMotor
-        ]
+    def get_resultsdic(self):
+        return {'id':self.id,
+        'timestamp':self.timestamp.strftime('%d/%m/%Y %H:%M:%S'),
+        'tempCarc':self.tempCarc,
+        'velEsteira':self.velEsteira,
+        'cargaPV':self.cargaPV,
+        'tensaoRS':self.tensaoRS,
+        'statusPID':self.statusPID,
+        'frequencia':self.frequencia,
+        'correnteMedia':self.correnteMedia,
+        'potAtivaTotal':self.potAtivaTotal,
+        'fpTotal':self.fpTotal,
+        'freqRotacao':self.freqRotacao,
+        'indicaPartida':self.indicaPartida,
+        'torque':self.torque,
+        'tipoMotor':self.tipoMotor
+        }
