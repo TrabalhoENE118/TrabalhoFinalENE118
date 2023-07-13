@@ -196,7 +196,7 @@ class MainApp(App):
                 'div':1.0
             },
             'definedccSoftStart':{
-                'addr':1318,
+               'addr':1318,
                 #Define a desaceleração do soft start(10s a 60s)
                 'tipo':'4X',
                 'div':1.0

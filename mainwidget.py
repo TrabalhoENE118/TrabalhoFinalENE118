@@ -246,18 +246,18 @@ class MainWidget(BoxLayout):
                 self._anterior['inicio']=0
         else:
             for key,value in self._tags['atuadores'].items():
-                print(f'{key}={self._meas["values"][key]} {self._anterior[key]} {self.readDataAtuadores(key)}')
+                print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')'
                 if self._meas['values'][key]!=None:
-                    if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
+                    #if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
                         
-                        self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
-                        print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]} e valor lido do servidor de modbus {self.readDataAtuadores(key)}')
-                        self._anterior[key]=self._meas['values'][key]
-
-                    #if self._meas['values'][key]!=self._anterior[key]:
-                    #    print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]}' )
                     #    self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                    #    print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]} e valor lido do servidor de modbus {self.readDataAtuadores(key)}')
                     #    self._anterior[key]=self._meas['values'][key]
+
+                    if self._meas['values'][key]!=self._anterior[key]:
+                        print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]}' )
+                        self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                        self._anterior[key]=self._meas['values'][key]
 
     def updateGraph(self):
         '''
@@ -285,7 +285,7 @@ class MainWidget(BoxLayout):
         """
         Método para a escrita de um "float" na tabela MODBUS
         """
-        builder = BinaryPayloadBuilder()
+        builder = BinaryPayloadBuilder(byteorder=Endian.Big, wordorder=Endian.Little)
         builder.add_32bit_float(data)
         payload = builder.to_registers()
         return self._modbusClient.write_multiple_registers(addr,payload)

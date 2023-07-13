@@ -50,9 +50,9 @@ class PidPopup(Popup):
         super().__init__(**kwargs)
         self._MV=0.0
         self._SP=0.0
-        self._P=0.0
-        self._I=0.0
-        self._D=0.0
+        self._P=8.0
+        self._I=5.0
+        self._D=2.0
     def update(self,medida):
         """
         Método utilizado para atualizar os valores do PID
