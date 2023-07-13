@@ -200,7 +200,7 @@ class MainWidget(BoxLayout):
         if tipo=='4X':
             self._modbusClient.write_single_register(addr,int(value*div))
         elif tipo=='FP':
-            self.escreveFloat(addr,value*div)
+            print(self.escreveFloat(addr,float(value*div)))
     def updateGUI(self):
         '''
         Método para a atualização da interface gráfica
@@ -246,17 +246,18 @@ class MainWidget(BoxLayout):
                 self._anterior['inicio']=0
         else:
             for key,value in self._tags['atuadores'].items():
-                print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')
+                print(f'{key}={self._meas["values"][key]} {self._anterior[key]} {self.readDataAtuadores(key)}')
                 if self._meas['values'][key]!=None:
-                    #if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
-                       # print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]} e valor lido do servidor de modbus {self.readDataAtuadores(key)}')
-                       # self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
-                       # self._anterior[key]=self._meas['values'][key]
-
-                    if self._meas['values'][key]!=self._anterior[key]:
-                        print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]}' )
+                    if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
+                        
                         self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                        print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]} e valor lido do servidor de modbus {self.readDataAtuadores(key)}')
                         self._anterior[key]=self._meas['values'][key]
+
+                    #if self._meas['values'][key]!=self._anterior[key]:
+                    #    print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]}' )
+                    #    self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                    #    self._anterior[key]=self._meas['values'][key]
 
     def updateGraph(self):
         '''
@@ -280,12 +281,12 @@ class MainWidget(BoxLayout):
         decoder = BinaryPayloadDecoder.fromRegisters(result, byteorder=Endian.Big, wordorder=Endian.Little)
         decoded = decoder.decode_32bit_float()
         return decoded
-    def escreveFloat(self,addr,float):
+    def escreveFloat(self,addr,data):
         """
         Método para a escrita de um "float" na tabela MODBUS
         """
         builder = BinaryPayloadBuilder()
-        builder.add_32bit_float(float)
+        builder.add_32bit_float(data)
         payload = builder.to_registers()
         return self._modbusClient.write_multiple_registers(addr,payload)
             
