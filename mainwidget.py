@@ -246,7 +246,7 @@ class MainWidget(BoxLayout):
                 self._anterior['inicio']=0
         else:
             for key,value in self._tags['atuadores'].items():
-                print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')'
+                print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')
                 if self._meas['values'][key]!=None:
                     #if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
                         
