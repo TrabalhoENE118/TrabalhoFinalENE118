@@ -53,7 +53,6 @@ class PidPopup(Popup):
         self._P=float(self.ids.defineP.text)
         self._I=float(self.ids.defineI.text)
         self._D=float(self.ids.defineD.text)
-        print(f'P={self._P},I={self._I},D={self._D}')
     def update(self,medida):
         """
         Método utilizado para atualizar os valores do PID
@@ -66,7 +65,6 @@ class PidPopup(Popup):
             self.ids.statusPID.text = 'Manual'
         #Atuadores
         AutomaticoPid=self.ids.AutomaticoOn.active
-        print(f'P={self._P},I={self._I},D={self._D},MV={self._MV},SP={self._SP}')
         if AutomaticoPid:
             medida['values']['selPID']=0
         else:
@@ -78,7 +76,6 @@ class PidPopup(Popup):
         medida['values']['defineD']=self._D
     def setSetPoint(self):
         self._SP= float(self.ids.defineSetPoint.text) 
-
     def setMV(self):
         self._MV= float(self.ids.defineMV.text)
     def setP(self):
@@ -141,8 +138,7 @@ class ComandoPopup(Popup):
             if self._partida== 'Direta':
                 medida['values']['partidaDireta']=self._operacao
                 medida['values']['selTipoPartida']=3
-                print(medida['values']['partidaDireta'])
-                print(medida['values']['selTipoPartida'])
+    
 
             elif self._partida == 'Soft-Start':
                 medida['values']['partidaSoftStart']=self._operacao
@@ -171,7 +167,7 @@ class ComandoPopup(Popup):
         self._velInversor=int(self.ids.velInversor.text)
     def setVelInversorSlider(self,vel):
         self._velInversor=vel
-        print(self._velInversor)
+        
 class DataGraphPopup(Popup):
     def __init__(self,xmax,plot_color,**kwargs):
         super().__init__(**kwargs)

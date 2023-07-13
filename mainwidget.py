@@ -180,6 +180,17 @@ class MainWidget(BoxLayout):
         
             elif value['tipo']=='FP': #Floating Point
                 self._meas['values'][key]=(self.lerFloat(value['addr']))/value['div']
+    def readDataAtuadores(self,chave):
+        """
+        Método para leitura dos dados dos atuadores
+        """ 
+        for key,value in self._tags['atuadores'].items():
+            if key==chave:
+                if value['tipo']=='4X':
+                    return (self._modbusClient.read_holding_registers(value['addr'],1)[0])/value['div']
+                elif value['tipo']=='FP':
+                    return (self.lerFloat(value['addr']))/value['div']
+
 
     def writeData(self,addr,tipo,div,value):
         """
@@ -236,10 +247,17 @@ class MainWidget(BoxLayout):
         else:
             for key,value in self._tags['atuadores'].items():
                 print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')
-                if self._meas['values'][key]!=None and self._meas['values'][key]!=self._anterior[key]:
-                    print(f'{key}={self._meas["values"][key]}')
-                    self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
-                    self._anterior[key]=self._meas['values'][key]
+                if self._meas['values'][key]!=None:
+                    #if self._meas['values'][key]!=self._anterior[key] or self._meas['values'][key]!=self.readDataAtuadores(key):
+                       # print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]} e valor lido do servidor de modbus {self.readDataAtuadores(key)}')
+                       # self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                       # self._anterior[key]=self._meas['values'][key]
+
+                    if self._meas['values'][key]!=self._anterior[key]:
+                        print(f'{key} esta sendo escrito com valor {self._meas["values"][key]} e valor anterior {self._anterior[key]}' )
+                        self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
+                        self._anterior[key]=self._meas['values'][key]
+
     def updateGraph(self):
         '''
         Método para a atualização do gráfico

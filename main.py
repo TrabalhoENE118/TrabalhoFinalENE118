@@ -218,13 +218,3 @@ if __name__ == "__main__":
     Builder.load_string(open("popups.kv",encoding="utf-8").read(),rulesonly=True)
     MainApp().run()
 
-#Dúvidas
-
-
-# Só escrever quando houver mudança de valor
-# Preset de valores iniciais
-#consegui fazer
-
-# Dados em tempo real
-# Banco de dados
-# Arrumei o soft start
