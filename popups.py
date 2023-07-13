@@ -53,6 +53,7 @@ class PidPopup(Popup):
         self._P=float(self.ids.defineP.text)
         self._I=float(self.ids.defineI.text)
         self._D=float(self.ids.defineD.text)
+        print(f'P={self._P},I={self._I},D={self._D}')
     def update(self,medida):
         """
         Método utilizado para atualizar os valores do PID
@@ -65,6 +66,7 @@ class PidPopup(Popup):
             self.ids.statusPID.text = 'Manual'
         #Atuadores
         AutomaticoPid=self.ids.AutomaticoOn.active
+        print(f'P={self._P},I={self._I},D={self._D},MV={self._MV},SP={self._SP}')
         if AutomaticoPid:
             medida['values']['selPID']=0
         else:
@@ -173,7 +175,7 @@ class ComandoPopup(Popup):
 class DataGraphPopup(Popup):
     def __init__(self,xmax,plot_color,**kwargs):
         super().__init__(**kwargs)
-        self.plot = LinePlot(line_width=1.5,color=plot_color)
+        self.plot = LinePlot(line_width=1.5)
         self.ids.graph.add_plot(self.plot)
         self.ids.graph.xmax = xmax
 class LabeledCheckBoxDataGraph(BoxLayout):
@@ -188,7 +190,6 @@ class HistGraphPopup(Popup):
         for key,value in kwargs.get('tags').items():
             cb = LabeledCheckBoxHistGraph()
             cb.ids.label.text = key
-            cb.ids.label.color = value['color']
             cb.id= key
             self.ids.sensores.add_widget(cb)
 class LabeledCheckBoxHistGraph(BoxLayout):

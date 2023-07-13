@@ -46,7 +46,7 @@ class MainWidget(BoxLayout):
         self._meas['values']={}
         for key,value in kwargs.get('modbus_addrs').items():
             plot_color=(random.random(),random.random(),random.random(),1)
-            self._tags['modbusaddrs'][key]={'addr':value['addr'],'color':plot_color,'legenda':value['legenda'],'tipo':value['tipo'],'div':value['div']}
+            self._tags['modbusaddrs'][key]={'addr':value['addr'],'color':plot_color,'legenda':value['legenda'],'tipo':value['tipo'],'div':value['div'],'escalamax':value['escalamax']}
         
         for key,value in kwargs.get('atuadores').items():
             self._tags['atuadores'][key]={'addr':value['addr'],'tipo':value['tipo'],'div':value['div']}
@@ -63,6 +63,7 @@ class MainWidget(BoxLayout):
                 self._graph=DataGraphPopup(self._max_points,self._tags['modbusaddrs'][key]['color'])
         
         self._hgraph= HistGraphPopup(tags=self._tags['modbusaddrs'])
+
     def startDataRead(self,ip,port):
         """
         Método utilizado para a configuração do IP e porta 
@@ -129,9 +130,6 @@ class MainWidget(BoxLayout):
             final_t=self._hgraph.ids.txt_final_time.text
             init_t=datetime.strptime(init_t,'%d/%m/%Y %H:%M:%S')
             final_t=datetime.strptime(final_t,'%d/%m/%Y %H:%M:%S')
-            
-            #for sensor in self._hgraph.ids.sensores.children:
-            #    if sensor.ids.checkbox.active:
                 
             if init_t is None or final_t is None:
                 return
@@ -156,12 +154,16 @@ class MainWidget(BoxLayout):
                         continue
                     for s in sensorAtivo:
                         if key==s:
-                            p= LinePlot(line_width=1,color=self._tags['modbusaddrs'][key]['color'])
+                            p= LinePlot(line_width=1)
                             p.points = [(x, results[x][key]) for x in range(0,len(results))]
                             self._hgraph.ids.graph.add_plot(p)
+                            self._hgraph.ids.graph.ymax=self._tags['modbusaddrs'][s]['escalamax']
+                            self._hgraph.ids.graph.y_ticks_major=self._tags['modbusaddrs'][s]['escalamax']/5
+                            self._hgraph.ids.graph.ylabel= self._tags['modbusaddrs'][s]['legenda']
             self._hgraph.ids.graph.xmax=len(results)
-            print(tempo)
             self._hgraph.ids.update_x_labels(tempo)
+            
+
         except Exception as e:
             print("Erro na busca no banco:",e.args)
 
@@ -212,7 +214,15 @@ class MainWidget(BoxLayout):
         self._pidPopup.update(self._meas)
         self._medicoesPopup.update(self._meas)
         self._comandoPopup.update(self._meas)
-        #Atuadores: #addr #tipo #div #value
+
+        self.updateAtuadores()
+        self.updateGraph() 
+        
+    def updateAtuadores(self):
+        '''
+        Método para a atualização dos atuadores
+        '''
+        #Atuadores no formato(addr,tipo,div,value)
         print("------------------------")
         print("Atuadores:")
         if self._anterior['inicio']==1:
@@ -225,16 +235,19 @@ class MainWidget(BoxLayout):
                 self._anterior['inicio']=0
         else:
             for key,value in self._tags['atuadores'].items():
+                print(f'{key}={self._meas["values"][key]} {self._anterior[key]}')
                 if self._meas['values'][key]!=None and self._meas['values'][key]!=self._anterior[key]:
                     print(f'{key}={self._meas["values"][key]}')
                     self.writeData(value['addr'],value['tipo'],value['div'],self._meas['values'][key])
                     self._anterior[key]=self._meas['values'][key]
-
-            
-        #Atualização do gráfico
+    def updateGraph(self):
+        '''
+        Método para a atualização do gráfico
+        '''
         self._graph.ids.graph.updateGraph((self._meas['timestamp'],self._meas['values'][self._selection]),0)
         self._graph.ids.graph.ylabel= self._tags['modbusaddrs'][self._selection]['legenda']
-
+        self._graph.ids.graph.ymax=self._tags['modbusaddrs'][self._selection]['escalamax']
+        self._graph.ids.graph.y_ticks_major=self._tags['modbusaddrs'][self._selection]['escalamax']/5
     def stopRefresh(self): 
         """
         Método para a parada da atualização da interface gráfica

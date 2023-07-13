@@ -1,3 +1,5 @@
+import os
+os.environ["KIVY_NO_CONSOLELOG"] = "1"
 from kivy.app import App
 from mainwidget import MainWidget
 from kivy.lang.builder import Builder
@@ -16,82 +18,95 @@ class MainApp(App):
                 'addr':706, 
                 'legenda': 'Temperatura da carcaça(ºC)',
                 'tipo':'FP',
-                'div':10.0
+                'div':10.0,
+                'escalamax': 100.0
                 
             },
             'velEsteira':{
                 'addr':724, 
                 'legenda': 'Velocidade da esteira(m/min)',
                 'tipo':'FP',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 20.0
             },
             'cargaPV':{
                 'addr':710,
                 'legenda': 'Carga sobre a esteira(Kgf/m²)',
                 'tipo':'FP',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 300.0
 
             },
             'tensaoRS':{
                 'addr':847,
                 'legenda': 'Tensão entre R e S(V)',   
                 'tipo':'4X',
-                'div':10.0
+                'div':10.0,
+                'escalamax': 500.0
             },
             'statusPID':{
                 'addr':722,
                 'legenda': 'Status do PID',
                 'tipo':'4X',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 2.0
             },
             'frequencia':{
                 'addr':830,
                 'legenda': 'Frequência da rede(Hz)',
                 'tipo':'4X',
-                'div':100.0
+                'div':100.0,
+                'escalamax': 100.0
             }   ,
             'correnteMedia':{
                 'addr':845,
                 'legenda': 'Corrente média(A)',
                 'tipo':'4X',
-                'div':100.0
+                'div':100.0,
+                'escalamax': 10.0
             },
             'potAtivaTotal':{
                 'addr':855,
                 'legenda': 'Potência ativa total(W)',
                 'tipo':'4X',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 1000.0
 
             },
             'fpTotal':{
                 'addr':871,
                 'legenda': 'Fator de potência total',
                 'tipo':'4X',
-                'div':1000.0
+                'div':1000.0,
+                'escalamax': 1.0
             },
             'freqRotacao':{
                 'addr':884,
                 'legenda': 'Frequência de rotação(Hz)',
                 'tipo':'FP',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 3000.0
             },
             'indicaPartida':{
                 'addr':1216, 
                 'legenda': 'Indica partida(0=desligado, 1=ligado)',      
                 'tipo':'4X',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 2.0
             },
             'torque':{
                 'addr':1420,
                 'legenda': 'Torque(N.m)',
                 'tipo':'FP',
-                'div':100.0
+                'div':100.0,
+                'escalamax': 1.0
             },
             'tipoMotor':{
                 'addr':708,
                 'legenda': 'Tipo de motor',
                 'tipo':'4X',
-                'div':1.0
+                'div':1.0,
+                'escalamax': 2.0
             }
             
         },

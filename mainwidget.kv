@@ -13,12 +13,12 @@
         spacing: 10
         Label:
             text: 'Supervisório Esteira v1.0'
-            size_hint_x :None
+            size_hint_x :0.35
             width: 300
 
         BoxLayout:
             orientation:'vertical'
-            size_hint_x:None
+            size_hint_x:0.5
             width: 400
             Label:
                 text: 'Configurações'
@@ -33,7 +33,7 @@
 
         Image:
             id:img_con
-            size_hint_x:None
+            size_hint_x:0.05
             width: 80
             source: 'imgs/desconectado.png'
             pos_hint: {'top':1, 'right':1}
@@ -79,12 +79,15 @@
             halign: 'center'
             pos_hint: {'x':-0.43, 'y':-0.2}
             color: 0,0,0,1
+
+        
         BoxLayout:
             orientation: 'vertical'
             size_hint: (0.1,0.1)
+            background_color: 0,0,0,0
             pos_hint: {'x':0.855, 'y':0.75}
             Label:
-                text: 'Carga na esteira'
+                text: 'Carga na Esteira'
                 font_size: 20
                 bold: True
                 halign: 'center'
@@ -101,7 +104,7 @@
             size_hint: (0.1,0.1)
             pos_hint: {'x':0.855, 'y':0.65}
             Label:
-                text: 'Vel. na esteira'
+                text: 'Vel. da Esteira'
                 font_size: 20
                 bold: True
                 halign: 'center'

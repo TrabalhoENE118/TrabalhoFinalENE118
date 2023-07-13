@@ -122,7 +122,7 @@
                     text: "Automático"
                     size: 50, 10
                     group: "Aut/Man"
-                    active: True
+                    active: False
                 Label:
                     text:"Automático"
                 CheckBox:
@@ -130,7 +130,8 @@
                     text: "Manual"
                     size: 50, 10
                     group: "Aut/Man"
-                    active: False
+                    
+                    active: True
                 Label:
                     text:"Manual"
         GridLayout:
@@ -491,7 +492,6 @@
                 on_active: app.root._selection='tempCarc' if app.root is not None else None
             CheckBox:
                 id: checkvelEsteira
-        
                 group: "select_group"
                 on_active: app.root._selection='velEsteira' if app.root is not None else None
             CheckBox:
@@ -501,7 +501,6 @@
                 on_active: app.root._selection='cargaPV' if app.root is not None else None
             CheckBox:
                 id: checktensaoRS
-    
                 group: "select_group"
                 on_active: app.root._selection='tensaoRS' if app.root is not None else None
             CheckBox:
@@ -510,14 +509,14 @@
                 on_active: app.root._selection='frequencia' if app.root is not None else None
             CheckBox:
                 id: checkcorrenteMedia
-                active: True
+                
                 group: "select_group"
                 on_active: app.root._selection='correnteMedia' if app.root is not None else None
             CheckBox:
                 id: checkpotAtiva
  
                 group: "select_group"
-                
+                active: True
                 on_active: app.root._selection='potAtivaTotal' if app.root is not None else None
             CheckBox:
                 id: checkfpTotal
@@ -613,6 +612,7 @@
         orientation: "vertical"
         CheckBox:
             id: checkbox
+            group: "bd_group"
             on_active: app.root.getDataDB()
         Label:
             id: label
